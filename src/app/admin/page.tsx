@@ -24,6 +24,15 @@ async function deleteInvite(formData: FormData) {
   revalidatePath('/admin')
 }
 
+async function assignPlayer(formData: FormData) {
+  'use server'
+  const userId = formData.get('userId') as string
+  const playerName = formData.get('playerName') as string
+  if (!userId || !playerName) return
+  await prisma.user.update({ where: { id: userId }, data: { playerName } })
+  revalidatePath('/admin')
+}
+
 export default async function AdminPage() {
   const session = await auth()
 
@@ -172,7 +181,36 @@ export default async function AdminPage() {
                 <tr key={u.id}>
                   <td style={{ textAlign: 'left', fontSize: 13, fontWeight: 600 }}>{u.name ?? '—'}</td>
                   <td style={{ textAlign: 'left', fontSize: 12, color: 'var(--qg-fg-3)' }}>{u.email}</td>
-                  <td style={{ textAlign: 'left', fontSize: 13 }}>{u.playerName ?? '—'}</td>
+                  <td style={{ textAlign: 'left', fontSize: 13 }}>
+                    {u.playerName ?? (
+                      <form action={assignPlayer} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                        <input type="hidden" name="userId" value={u.id} />
+                        <select
+                          name="playerName"
+                          required
+                          style={{
+                            padding: '4px 8px', borderRadius: 4, border: '1px solid var(--qg-line)',
+                            fontSize: 12, color: 'var(--qg-fg-1)', background: '#fff',
+                          }}
+                        >
+                          <option value="">Vincular jogador...</option>
+                          {players.map(p => (
+                            <option key={p.name} value={p.name}>{p.name}</option>
+                          ))}
+                        </select>
+                        <button
+                          type="submit"
+                          style={{
+                            background: 'var(--qg-green)', color: 'var(--qg-cream)',
+                            border: 'none', borderRadius: 4, padding: '4px 10px',
+                            fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                          }}
+                        >
+                          OK
+                        </button>
+                      </form>
+                    )}
+                  </td>
                   <td style={{ textAlign: 'center' }}>
                     <span style={{
                       display: 'inline-block', padding: '2px 8px', borderRadius: 3, fontSize: 10,
