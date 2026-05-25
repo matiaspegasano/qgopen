@@ -1,0 +1,18 @@
+
+> qg-open@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 11548, using available port 3001 instead.
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.15.18:3001
+✓ Ready in 1252ms
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          11548
+- Dir:          C:\Users\matia\OneDrive\QG Open\qg-open
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 11548 /F to stop it.
+[?25h

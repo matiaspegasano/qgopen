@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("player")
+  playerName    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+  @@id([identifier, token])
+}
+
+model Invite {
+  id         String    @id @default(cuid())
+  email      String    @unique
+  playerName String
+  createdAt  DateTime  @default(now())
+  usedAt     DateTime?
+}
+
+// Hourly availability slots a player submits for a specific match + date
+model Availability {
+  id         String   @id @default(cuid())
+  matchId    String
+  playerName String
+  date       String   // 'YYYY-MM-DD'
+  slots      String   // JSON: ['08:00','09:00',...]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([matchId, playerName, date])
+}
+
+// A scheduling proposal sent from one player to the other
+model ScheduleRequest {
+  id           String   @id @default(cuid())
+  matchId      String
+  fromPlayer   String
+  toPlayer     String
+  date         String   // 'YYYY-MM-DD'
+  startTime    String   // 'HH:00'
+  endTime      String   // 'HH:00'
+  status       String   @default("pending") // pending | confirmed | refused | counter
+  counterDate  String?
+  counterStart String?
+  counterEnd   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([matchId])
+}
