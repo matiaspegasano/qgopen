@@ -23,7 +23,7 @@ function isAdmin(email: string | null | undefined) {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [Google],
+  providers: [Google({ clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET })],
   callbacks: {
     async signIn({ user }) {
       if (!user.email) return false
