@@ -324,7 +324,7 @@ export default function RankingPage() {
               fontSize: 11, color: 'var(--qg-fg-3)', letterSpacing: '0.02em',
             }}>
               <span style={{ fontWeight: 600, marginRight: 6, color: 'var(--qg-fg-2)' }}>Pontuação:</span>
-              Campeão 100 · Vice 80 · 3º-4º 65 · 5º 50 · 6º 40 · 7º-8º 30 · 9º-12º 15
+              Campeão 100 · Vice 80 · 3º-4º 65 · 5º 50 · 6º 40 · 7º-8º 30 · 9º-12º 15 · 13º-16º 0
             </div>
           </>
         </>
