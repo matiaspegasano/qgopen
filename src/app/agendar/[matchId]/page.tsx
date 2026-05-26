@@ -481,7 +481,7 @@ export default function AgendarPage() {
           <div style={{ fontSize: 13, color: 'var(--qg-fg-3)', marginBottom: 20 }}>
             Você pode enviar uma proposta de horário diretamente.
           </div>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end', marginBottom: 14 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--qg-fg-4)', textTransform: 'uppercase' }}>Dia</span>
               <select
@@ -502,14 +502,24 @@ export default function AgendarPage() {
                 {HOURS.slice(0, 14).map(h => <option key={h} value={h}>{h}</option>)}
               </select>
             </div>
-            <button
-              onClick={sendManualProposal}
-              disabled={sending}
-              style={{ padding: '9px 20px', borderRadius: 'var(--qg-radius-sm)', border: 'none', background: 'var(--qg-green)', color: 'var(--qg-cream)', fontWeight: 700, fontSize: 13, cursor: sending ? 'default' : 'pointer', opacity: sending ? 0.6 : 1, letterSpacing: '0.04em' }}
-            >
-              {sending ? 'Enviando…' : `Propor ${manualHour} – ${manualEndHour}`}
-            </button>
           </div>
+          <div style={{ marginBottom: 14 }}>
+            <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--qg-fg-4)', marginBottom: 6 }}>Local (quadra)</label>
+            <input
+              type="text"
+              placeholder="Ex: Residencial 6, Quadra do clube…"
+              value={location}
+              onChange={e => setLocation(e.target.value)}
+              style={{ width: '100%', maxWidth: 360, padding: '8px 12px', borderRadius: 'var(--qg-radius-sm)', border: '1px solid var(--qg-line)', background: 'var(--qg-bg)', color: 'var(--qg-fg-1)', fontSize: 13, boxSizing: 'border-box' }}
+            />
+          </div>
+          <button
+            onClick={sendManualProposal}
+            disabled={sending}
+            style={{ padding: '9px 20px', borderRadius: 'var(--qg-radius-sm)', border: 'none', background: 'var(--qg-green)', color: 'var(--qg-cream)', fontWeight: 700, fontSize: 13, cursor: sending ? 'default' : 'pointer', opacity: sending ? 0.6 : 1, letterSpacing: '0.04em' }}
+          >
+            {sending ? 'Enviando…' : `Propor ${manualHour} – ${manualEndHour}`}
+          </button>
         </div>
       )}
 
