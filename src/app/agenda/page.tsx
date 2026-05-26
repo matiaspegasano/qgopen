@@ -18,6 +18,7 @@ type ScheduleReq = {
   id: string; matchId: string;
   fromPlayer: string; toPlayer: string;
   date: string; startTime: string; endTime: string;
+  location: string | null;
   status: string;
 };
 
