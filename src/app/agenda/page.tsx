@@ -271,20 +271,27 @@ export default function AgendaPage() {
             background: '#fff',
           }}>
             {round.weekDays.map((day, i) => {
-              const isToday    = day === today;
-              const hasMatch   = scheduledDays.has(day);
-              const isSelected = selectedDay === day;
+              const isToday      = day === today;
+              const isPast       = day < today;
+              const outOfWindow  = day < round.start || day > round.end;
+              const isDisabled   = isPast || outOfWindow;
+              const hasMatch     = scheduledDays.has(day);
+              const isSelected   = selectedDay === day;
+              const canSelect    = hasMatch && !isDisabled;
+
               return (
                 <button
                   key={day}
-                  onClick={() => setSelectedDay(isSelected ? null : day)}
+                  onClick={() => canSelect && setSelectedDay(isSelected ? null : day)}
                   style={{
                     display: 'flex', flexDirection: 'column', alignItems: 'center',
                     padding: '10px 4px 8px',
                     background: isSelected ? 'var(--qg-green)' : 'transparent',
-                    border: 'none', cursor: 'pointer',
-                    borderRight: i < round.weekDays.length - 1 ? '1px solid var(--qg-line)' : 'none',
+                    border: 'none',
+                    cursor: canSelect ? 'pointer' : 'default',
+                    borderRight: i < 6 ? '1px solid var(--qg-line)' : 'none',
                     transition: 'background 120ms',
+                    opacity: isDisabled ? 0.38 : 1,
                   }}
                 >
                   <span style={{
