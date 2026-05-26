@@ -32,32 +32,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return !!invite
     },
     async session({ session, user }) {
+      let playerName: string | null = (user as any).playerName ?? null
+      let role: string = (user as any).role ?? 'player'
+
+      if ((!playerName || role === 'player') && session.user?.email) {
+        const updates: Record<string, unknown> = {}
+        if (!playerName) {
+          const invite = await prisma.invite.findUnique({ where: { email: session.user.email } })
+          if (invite) {
+            playerName = invite.playerName
+            updates.playerName = playerName
+            if (!invite.usedAt) {
+              await prisma.invite.update({ where: { email: session.user.email }, data: { usedAt: new Date() } })
+            }
+          }
+        }
+        if (isAdmin(session.user.email) && role !== 'admin') {
+          role = 'admin'
+          updates.role = 'admin'
+        }
+        if (Object.keys(updates).length > 0) {
+          await prisma.user.update({ where: { id: user.id }, data: updates })
+        }
+      }
+
       return {
         ...session,
         user: {
           ...session.user,
           id: user.id,
-          role: (user as any).role ?? 'player',
-          playerName: (user as any).playerName ?? null,
+          role,
+          playerName,
         },
       }
     },
   },
   events: {
-    async createUser({ user }) {
-      if (!user.email) return
-      const updates: Record<string, unknown> = {}
-      if (isAdmin(user.email)) updates.role = 'admin'
-      const invite = await prisma.invite.findUnique({ where: { email: user.email } })
-      if (invite && !invite.usedAt) {
-        updates.playerName = invite.playerName
-        await prisma.invite.update({ where: { email: user.email }, data: { usedAt: new Date() } })
-      }
-      if (Object.keys(updates).length > 0) {
-        await prisma.user.update({ where: { id: user.id }, data: updates })
-      }
-    },
-  },
   pages: {
     signIn: '/login',
     error: '/login',
