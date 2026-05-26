@@ -255,117 +255,118 @@ export default function AgendaPage() {
           <div style={{ fontFamily: 'var(--qg-font-display)', fontSize: 28, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.02em', color: 'var(--qg-fg-1)' }}>Partidas</div>
         </div>
 
-        {/* ── CALENDAR GRID ── */}
-        <div className="card" style={{ overflow: 'hidden', marginBottom: 32 }}>
+        {/* ── TWO-COLUMN LAYOUT ── */}
+        <div className="agenda-layout">
 
-          {/* Round nav */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 8px', background: 'var(--qg-green)' }}>
-            <NavBtn onClick={() => setRoundIdx(i => Math.max(0, i-1))} disabled={roundIdx === 0}>‹</NavBtn>
-            <div style={{ textAlign: 'center', flex: 1 }}>
-              <div style={{ fontFamily: 'var(--qg-font-display)', fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--qg-cream)' }}>{round.phaseName}</div>
-              <div style={{ fontSize: 11, color: 'rgba(234,241,236,0.65)', marginTop: 2, letterSpacing: '0.04em' }}>{rangeLabel}</div>
-            </div>
-            <NavBtn onClick={() => setRoundIdx(i => Math.min(rounds.length-1, i+1))} disabled={roundIdx === rounds.length-1}>›</NavBtn>
-          </div>
+          {/* LEFT — Calendar grid */}
+          <div className="agenda-calendar">
+            <div className="card" style={{ overflow: 'hidden' }}>
 
-          {/* Horizontal scroll wrapper for narrow screens */}
-          <div style={{ overflowX: 'auto' }}>
-            <div style={{ minWidth: 400 }}>
-
-              {/* Day headers */}
-              <div style={{ display: 'flex', borderBottom: '1px solid var(--qg-line)', background: '#fff' }}>
-                <div style={{ width: TIME_W, flexShrink: 0 }} />
-                {round.weekDays.map(day => {
-                  const isPast   = day < today;
-                  const outOfWin = day < round.start || day > round.end;
-                  const isToday  = day === today;
-                  return (
-                    <div key={day} style={{ flex: 1, textAlign: 'center', padding: '8px 2px', borderLeft: '1px solid var(--qg-line)', opacity: (isPast || outOfWin) ? 0.38 : 1 }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: isToday ? 'var(--qg-clay)' : 'var(--qg-fg-3)' }}>{dayAbbr(day)}</div>
-                      <div style={{ fontFamily: 'var(--qg-font-display)', fontSize: 20, fontWeight: 700, lineHeight: 1.1, color: isToday ? 'var(--qg-clay)' : 'var(--qg-fg-1)', marginTop: 2 }}>{dayNum(day)}</div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Time grid — full height, no overflow, page scrolls */}
-              <div style={{ display: 'flex', position: 'relative' }}>
-
-                {/* Time labels */}
-                <div style={{ width: TIME_W, flexShrink: 0 }}>
-                  {hours.map(h => (
-                    <div key={h} style={{ height: ROW_H, display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', paddingRight: 8, paddingTop: 4, fontSize: 10, color: 'var(--qg-fg-3)', borderTop: '1px solid var(--qg-line)' }}>
-                      {String(h).padStart(2,'0')}h
-                    </div>
-                  ))}
+              {/* Round nav */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 8px', background: 'var(--qg-green)' }}>
+                <NavBtn onClick={() => setRoundIdx(i => Math.max(0, i-1))} disabled={roundIdx === 0}>‹</NavBtn>
+                <div style={{ textAlign: 'center', flex: 1 }}>
+                  <div style={{ fontFamily: 'var(--qg-font-display)', fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--qg-cream)' }}>{round.phaseName}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(234,241,236,0.65)', marginTop: 2, letterSpacing: '0.04em' }}>{rangeLabel}</div>
                 </div>
-
-                {/* Day columns */}
-                {round.weekDays.map(day => {
-                  const isPast   = day < today;
-                  const outOfWin = day < round.start || day > round.end;
-                  const muted    = isPast || outOfWin;
-
-                  const dayEvents = round.matches
-                    .map(m => ({ match: m, req: reqByMatch.get(m.matchId) }))
-                    .filter(({ req }) => req?.date === day);
-
-                  return (
-                    <div key={day} style={{ flex: 1, minWidth: 50, position: 'relative', borderLeft: '1px solid var(--qg-line)', height: hours.length * ROW_H }}>
-                      {/* Hour cells */}
-                      {hours.map(h => (
-                        <div key={h} style={{ position: 'absolute', top: (h-H_START)*ROW_H, left: 0, right: 0, height: ROW_H, borderTop: '1px solid var(--qg-line)', background: muted ? 'rgba(0,0,0,0.025)' : 'transparent' }} />
-                      ))}
-
-                      {/* Scheduled stripes */}
-                      {dayEvents.map(({ match, req }) => {
-                        if (!req) return null;
-                        const sh = parseHour(req.startTime), eh = parseHour(req.endTime);
-                        if (sh < H_START || eh > H_END) return null;
-                        const isConf = req.status === 'confirmed';
-                        return (
-                          <div key={match.matchId} style={{
-                            position: 'absolute',
-                            top: (sh-H_START)*ROW_H + 2, left: 3, right: 3,
-                            height: (eh-sh)*ROW_H - 4,
-                            background: isConf ? 'rgba(5,96,60,0.15)' : 'rgba(211,82,32,0.15)',
-                            borderLeft: `3px solid ${isConf ? 'var(--qg-green)' : 'var(--qg-clay)'}`,
-                            borderRadius: 3, zIndex: 1,
-                            display: 'flex', flexDirection: 'column', justifyContent: 'center',
-                            padding: '0 5px', overflow: 'hidden',
-                          }}>
-                            <span style={{ fontSize: 9, fontWeight: 700, color: isConf ? 'var(--qg-green)' : 'var(--qg-clay)', lineHeight: 1 }}>
-                              {req.startTime}–{req.endTime}
-                            </span>
-                            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--qg-fg-1)', marginTop: 2, lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                              {match.p1.split(' ')[0]} × {match.p2.split(' ')[0]}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
+                <NavBtn onClick={() => setRoundIdx(i => Math.min(rounds.length-1, i+1))} disabled={roundIdx === rounds.length-1}>›</NavBtn>
               </div>
 
-            </div>
-          </div>
-        </div>
+              {/* Horizontal scroll for narrow screens */}
+              <div style={{ overflowX: 'auto' }}>
+                <div style={{ minWidth: 320 }}>
 
-        {/* ── MATCH CARDS (outside calendar) ── */}
-        <div style={{ marginBottom: 8 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--qg-fg-3)', marginBottom: 14 }}>
-            Partidas desta rodada
-          </div>
-          {loading ? (
-            <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--qg-fg-3)', fontSize: 13 }}>Carregando...</div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {sortedMatches.map(m => (
-                <MatchCard key={m.matchId} match={m} req={reqByMatch.get(m.matchId)} />
-              ))}
+                  {/* Day headers */}
+                  <div style={{ display: 'flex', borderBottom: '1px solid var(--qg-line)', background: '#fff' }}>
+                    <div style={{ width: TIME_W, flexShrink: 0 }} />
+                    {round.weekDays.map(day => {
+                      const isPast   = day < today;
+                      const outOfWin = day < round.start || day > round.end;
+                      const isToday  = day === today;
+                      return (
+                        <div key={day} style={{ flex: 1, textAlign: 'center', padding: '8px 2px', borderLeft: '1px solid var(--qg-line)', opacity: (isPast || outOfWin) ? 0.38 : 1 }}>
+                          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: isToday ? 'var(--qg-clay)' : 'var(--qg-fg-3)' }}>{dayAbbr(day)}</div>
+                          <div style={{ fontFamily: 'var(--qg-font-display)', fontSize: 18, fontWeight: 700, lineHeight: 1.1, color: isToday ? 'var(--qg-clay)' : 'var(--qg-fg-1)', marginTop: 2 }}>{dayNum(day)}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Time grid */}
+                  <div style={{ display: 'flex', position: 'relative' }}>
+                    {/* Time labels */}
+                    <div style={{ width: TIME_W, flexShrink: 0 }}>
+                      {hours.map(h => (
+                        <div key={h} style={{ height: ROW_H, display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', paddingRight: 8, paddingTop: 4, fontSize: 10, color: 'var(--qg-fg-3)', borderTop: '1px solid var(--qg-line)' }}>
+                          {String(h).padStart(2,'0')}h
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Day columns */}
+                    {round.weekDays.map(day => {
+                      const isPast   = day < today;
+                      const outOfWin = day < round.start || day > round.end;
+                      const muted    = isPast || outOfWin;
+                      const dayEvents = round.matches
+                        .map(m => ({ match: m, req: reqByMatch.get(m.matchId) }))
+                        .filter(({ req }) => req?.date === day);
+
+                      return (
+                        <div key={day} style={{ flex: 1, minWidth: 36, position: 'relative', borderLeft: '1px solid var(--qg-line)', height: hours.length * ROW_H }}>
+                          {hours.map(h => (
+                            <div key={h} style={{ position: 'absolute', top: (h-H_START)*ROW_H, left: 0, right: 0, height: ROW_H, borderTop: '1px solid var(--qg-line)', background: muted ? 'rgba(0,0,0,0.025)' : 'transparent' }} />
+                          ))}
+                          {dayEvents.map(({ match, req }) => {
+                            if (!req) return null;
+                            const sh = parseHour(req.startTime), eh = parseHour(req.endTime);
+                            if (sh < H_START || eh > H_END) return null;
+                            const isConf = req.status === 'confirmed';
+                            return (
+                              <div key={match.matchId} style={{
+                                position: 'absolute',
+                                top: (sh-H_START)*ROW_H + 2, left: 2, right: 2,
+                                height: (eh-sh)*ROW_H - 4,
+                                background: isConf ? 'rgba(5,96,60,0.15)' : 'rgba(211,82,32,0.15)',
+                                borderLeft: `3px solid ${isConf ? 'var(--qg-green)' : 'var(--qg-clay)'}`,
+                                borderRadius: 3, zIndex: 1, overflow: 'hidden',
+                                display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 4px',
+                              }}>
+                                <span style={{ fontSize: 9, fontWeight: 700, color: isConf ? 'var(--qg-green)' : 'var(--qg-clay)', lineHeight: 1 }}>
+                                  {req.startTime}–{req.endTime}
+                                </span>
+                                <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--qg-fg-1)', marginTop: 2, lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  {match.p1.split(' ')[0]} × {match.p2.split(' ')[0]}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                </div>
+              </div>
             </div>
-          )}
+          </div>
+
+          {/* RIGHT — Match cards (sticky column) */}
+          <div className="agenda-sidebar">
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--qg-fg-3)', marginBottom: 14 }}>
+              Partidas desta rodada
+            </div>
+            {loading ? (
+              <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--qg-fg-3)', fontSize: 13 }}>Carregando...</div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {sortedMatches.map(m => (
+                  <MatchCard key={m.matchId} match={m} req={reqByMatch.get(m.matchId)} />
+                ))}
+              </div>
+            )}
+          </div>
+
         </div>
 
       </div>
