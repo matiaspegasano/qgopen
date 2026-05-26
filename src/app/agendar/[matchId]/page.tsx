@@ -255,7 +255,7 @@ export default function AgendarPage() {
     const res = await fetch(`/api/schedule-request/${matchId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...proposal, toPlayer: opponent }),
+      body: JSON.stringify({ ...proposal, toPlayer: opponent, location: location.trim() || null }),
     });
     const data = await res.json() as ScheduleRequest;
     setSchedReq(data);
