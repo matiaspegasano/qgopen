@@ -351,8 +351,8 @@ export default function AgendaPage() {
             </div>
           </div>
 
-          {/* RIGHT — Match cards (sticky column) */}
-          <div className="agenda-sidebar">
+          {/* RIGHT — Match cards (sticky sidebar) */}
+          <div style={{ flex: '0 0 300px', minWidth: 0, position: 'sticky', top: 76, maxHeight: 'calc(100vh - 96px)', overflowY: 'auto', paddingBottom: 24 }}>
             <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--qg-fg-3)', marginBottom: 14 }}>
               Partidas desta rodada
             </div>
