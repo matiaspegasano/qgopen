@@ -440,8 +440,20 @@ export default function AgendarPage() {
 
           {proposal && (
             <div style={{ marginTop: 20, padding: '16px 20px', borderRadius: 'var(--qg-radius-md)', background: 'var(--qg-bg-elev)', border: '1px solid var(--qg-green)' }}>
-              <div style={{ fontSize: 12, color: 'var(--qg-fg-2)', marginBottom: 12 }}>
+              <div style={{ fontSize: 12, color: 'var(--qg-fg-2)', marginBottom: 14 }}>
                 Propor a <strong>{opponent}</strong>: <strong>{formatDate(proposal.date)}</strong> das <strong>{proposal.start}</strong> às <strong>{proposal.end}</strong>
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--qg-fg-3)', marginBottom: 6 }}>
+                  Local (quadra)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ex: Residencial 6, Quadra do clube…"
+                  value={location}
+                  onChange={e => setLocation(e.target.value)}
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: 'var(--qg-radius-sm)', border: '1px solid var(--qg-line)', background: 'var(--qg-bg)', color: 'var(--qg-fg-1)', fontSize: 13, boxSizing: 'border-box' }}
+                />
               </div>
               <button
                 onClick={sendProposal}
