@@ -351,6 +351,11 @@ export default function AgendaPage() {
                                 <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--qg-fg-1)', marginTop: 2, lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {match.p1.split(' ')[0]} × {match.p2.split(' ')[0]}
                                 </span>
+                                {req.location && (
+                                  <span style={{ fontSize: 8, color: 'var(--qg-fg-3)', marginTop: 1, lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {req.location}
+                                  </span>
+                                )}
                               </div>
                             );
                           })}
