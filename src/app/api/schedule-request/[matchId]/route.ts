@@ -47,6 +47,7 @@ export async function POST(
       date: body.date,
       startTime: body.startTime,
       endTime: body.endTime,
+      location: body.location ?? null,
       status: 'pending',
       counterDate: null,
       counterStart: null,
@@ -59,6 +60,7 @@ export async function POST(
       date: body.date,
       startTime: body.startTime,
       endTime: body.endTime,
+      location: body.location ?? null,
     },
   });
 
