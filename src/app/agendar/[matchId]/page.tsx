@@ -83,9 +83,15 @@ function RequestBanner({
     return (
       <div style={{ background: 'var(--qg-bg-elev)', border: '1px solid var(--qg-line)', borderRadius: 'var(--qg-radius-md)', padding: '20px 24px', marginBottom: 28 }}>
         <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--qg-clay)', marginBottom: 8 }}>Proposta recebida de {req.fromPlayer}</div>
-        <div style={{ fontFamily: 'var(--qg-font-display)', fontSize: 20, fontWeight: 700, color: 'var(--qg-fg-1)', marginBottom: 20 }}>
+        <div style={{ fontFamily: 'var(--qg-font-display)', fontSize: 20, fontWeight: 700, color: 'var(--qg-fg-1)', marginBottom: req.location ? 8 : 20 }}>
           {formatDate(req.date)} • {req.startTime} – {req.endTime}
         </div>
+        {req.location && (
+          <div style={{ marginTop: 0, marginBottom: 16, fontSize: 13, color: 'var(--qg-fg-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {req.location}
+          </div>
+        )}
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <button onClick={() => onRespond('confirm')} style={{ padding: '10px 22px', borderRadius: 'var(--qg-radius-sm)', border: 'none', background: 'var(--qg-green)', color: 'var(--qg-cream)', fontWeight: 700, fontSize: 13, cursor: 'pointer', letterSpacing: '0.04em' }}>
             Confirmar
