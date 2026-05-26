@@ -371,6 +371,15 @@ export default function Nav() {
             </Link>
           ))}
 
+          <Link
+            href="/agenda"
+            className={'nav-dropdown-link' + (pathname === '/agenda' ? ' active' : '')}
+            onClick={() => setOpen(false)}
+            style={{ color: 'var(--qg-clay)', fontWeight: 700 }}
+          >
+            Agenda
+          </Link>
+
           {session?.user?.role === 'admin' && (
             <>
               <div className="nav-dropdown-divider" />
