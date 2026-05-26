@@ -26,6 +26,7 @@ type Notif = {
   label: string
   body: string
   type: 'action' | 'warning' | 'result' | 'schedule'
+  href?: string
 }
 
 function buildNotifs(playerName: string | null): Notif[] {
@@ -66,6 +67,7 @@ function buildNotifs(playerName: string | null): Notif[] {
         label: 'Partida disponível',
         body: `${m.round} · Você × ${opp} — agende sua partida.`,
         type: 'action',
+        href: `/agendar/${m.id}`,
       })
     })
   }
@@ -103,18 +105,11 @@ const typeIcon: Record<Notif['type'], React.ReactNode> = {
   ),
 }
 
-function NotifItem({ n }: { n: Notif }) {
+function NotifItem({ n, onClose }: { n: Notif; onClose?: () => void }) {
   const accent = typeAccent[n.type]
   const isPinned = !!n.pinned
-  return (
-    <div style={{
-      display: 'flex', gap: 12, padding: '14px 20px',
-      borderLeft: `3px solid ${accent}`,
-      background: isPinned
-        ? (n.type === 'action' ? 'rgba(5,72,47,0.04)' : 'rgba(211,82,32,0.04)')
-        : n.read ? 'transparent' : 'rgba(0,0,0,0.02)',
-      borderBottom: '1px solid var(--qg-line)',
-    }}>
+  const inner = (
+    <>
       <div style={{ flexShrink: 0, marginTop: 2, color: accent }}>{typeIcon[n.type]}</div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
@@ -130,8 +125,24 @@ function NotifItem({ n }: { n: Notif }) {
       {!n.read && (
         <div style={{ flexShrink: 0, marginTop: 6, width: 7, height: 7, borderRadius: '50%', background: accent }} />
       )}
-    </div>
+    </>
   )
+  const sharedStyle: React.CSSProperties = {
+    display: 'flex', gap: 12, padding: '14px 20px',
+    borderLeft: `3px solid ${accent}`,
+    background: isPinned
+      ? (n.type === 'action' ? 'rgba(5,72,47,0.04)' : 'rgba(211,82,32,0.04)')
+      : n.read ? 'transparent' : 'rgba(0,0,0,0.02)',
+    borderBottom: '1px solid var(--qg-line)',
+  }
+  if (n.href) {
+    return (
+      <Link href={n.href} onClick={onClose} style={{ ...sharedStyle, textDecoration: 'none', cursor: 'pointer' }}>
+        {inner}
+      </Link>
+    )
+  }
+  return <div style={sharedStyle}>{inner}</div>
 }
 
 /* ------------------------------------------------------------------ */
@@ -311,9 +322,9 @@ export default function Nav() {
             )}
           </div>
           <div className="nav-notif-section-label">Para você</div>
-          {pinnedNotifs.map(n => <NotifItem key={n.id} n={n} />)}
+          {pinnedNotifs.map(n => <NotifItem key={n.id} n={n} onClose={() => setNotifOpen(false)} />)}
           <div className="nav-notif-section-label" style={{ marginTop: 4 }}>Atividade</div>
-          {feedNotifs.map(n => <NotifItem key={n.id} n={n} />)}
+          {feedNotifs.map(n => <NotifItem key={n.id} n={n} onClose={() => setNotifOpen(false)} />)}
         </div>
       )}
 
