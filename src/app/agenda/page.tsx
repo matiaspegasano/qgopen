@@ -48,7 +48,7 @@ type RoundData = {
 
 function derivePhaseName(labels: string[]): string {
   const first = labels.find(Boolean) ?? '';
-  if (/Rodada/.test(first)) return first.replace(' Rodada', 'ª Rodada · Fase de Grupos').replace(/(\d+)ª Rodada · Fase de Grupos/, '$1ª Rodada · Fase de Grupos');
+  if (/Rodada/.test(first)) return `${first} · Fase de Grupos`;  // e.g. "1ª Rodada · Fase de Grupos"
   if (/Quarta/.test(first)) return 'Quartas de Final';
   if (/Semi/.test(first)) return 'Semi-Final';
   return 'Finais';
