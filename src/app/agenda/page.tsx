@@ -112,6 +112,21 @@ function dayNum(iso: string) { return parseInt(iso.split('-')[2]); }
 function monAbbr(iso: string) { return MON_ABR[parseInt(iso.split('-')[1]) - 1]; }
 function getToday() { return new Date().toISOString().split('T')[0]; }
 
+// Returns Mon-Sun (7 days) of the ISO week that contains the given date
+function getMonSunWeek(iso: string): string[] {
+  const [y, m, d] = iso.split('-').map(Number);
+  const date = new Date(y, m - 1, d);
+  const dow = date.getDay(); // 0=Sun … 6=Sat
+  const toMon = dow === 0 ? 6 : dow - 1;
+  const monday = new Date(date);
+  monday.setDate(d - toMon);
+  return Array.from({ length: 7 }, (_, i) => {
+    const cur = new Date(monday);
+    cur.setDate(monday.getDate() + i);
+    return cur.toISOString().split('T')[0];
+  });
+}
+
 /* ------------------------------------------------------------------ */
 /* SUB-COMPONENTS                                                      */
 /* ------------------------------------------------------------------ */
