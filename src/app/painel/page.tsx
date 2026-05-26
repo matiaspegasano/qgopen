@@ -944,7 +944,7 @@ export default function PainelPage() {
   }
 
   const selectedIds = [...selected];
-  const hasData     = selectedIds.some(id => editions.find(e => e.id === id)?.status === 'completed');
+  const hasData     = selectedIds.some(id => editions.find(e => e.id === id)?.status !== 'upcoming');
   const isUpcoming  = !hasData;
 
   return (
