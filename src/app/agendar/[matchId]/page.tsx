@@ -20,6 +20,7 @@ type ScheduleRequest = {
   date: string;
   startTime: string;
   endTime: string;
+  location: string | null;
   status: string;
   counterDate: string | null;
   counterStart: string | null;
