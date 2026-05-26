@@ -164,6 +164,8 @@ export default function AgendarPage() {
   const [sending, setSending] = useState(false);
   // Toast
   const [toast, setToast] = useState<string | null>(null);
+  // Location for proposals
+  const [location, setLocation] = useState('');
   // Manual proposal (when opponent has no availability)
   const [manualDate, setManualDate] = useState('');
   const [manualHour, setManualHour] = useState('09:00');
