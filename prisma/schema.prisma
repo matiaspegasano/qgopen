@@ -87,6 +87,7 @@ model ScheduleRequest {
   startTime    String   // 'HH:00'
   endTime      String   // 'HH:00'
   status       String   @default("pending") // pending | confirmed | refused | counter
+  location     String?
   counterDate  String?
   counterStart String?
   counterEnd   String?
