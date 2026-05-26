@@ -6,8 +6,7 @@ import TitleBar from '@/components/TitleBar';
 import Footer from '@/components/Footer';
 import EditionMultiDropdown from '@/components/EditionMultiDropdown';
 import RankingChart from '@/components/RankingChart';
-import { players, editions, editionPoints, groupStandingsByEdition, groupMatchesByEdition, games } from '@/lib/data';
-import { computeProvisionalPoints } from '@/lib/stats';
+import { players, editions, editionPoints, groupStandingsByEdition } from '@/lib/data';
 
 const photoMap: Record<string, { src: string; pos: string; width?: number; offsetX?: number; flipX?: boolean }> = {
   'Matias Pegasano':    { src: '/players/matias.jpeg',             pos: 'center 31%', offsetX: 100 },
