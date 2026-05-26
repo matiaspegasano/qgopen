@@ -75,17 +75,10 @@ function buildRanking(selectedIds: number[]) {
     editions.find(e => e.id === id)?.status !== 'upcoming'
   );
 
-  // Merge hardcoded points with provisional computed points for active editions
   const effectivePoints: Record<number, Record<string, number>> = {};
   editions.forEach(ed => {
-    if (ed.status === 'completed') {
+    if (ed.status !== 'upcoming') {
       effectivePoints[ed.id] = editionPoints[ed.id] ?? {};
-    } else if (ed.status === 'active') {
-      const hardcoded = editionPoints[ed.id] ?? {};
-      const provisional = computeProvisionalPoints(ed.id, groupMatchesByEdition, games);
-      const merged: Record<string, number> = { ...provisional };
-      Object.entries(hardcoded).forEach(([n, p]) => { merged[n] = p; });
-      effectivePoints[ed.id] = merged;
     }
   });
 
