@@ -327,34 +327,12 @@ export default function RankingPage() {
             )}
 
             {/* Points reference */}
-            <div style={{ marginTop: 32 }}>
-              <div className="card ranking-points-table" style={{ maxWidth: 480 }}>
-                <div className="card-header">Pontuação por resultado</div>
-                <table className="standings">
-                  <thead>
-                    <tr>
-                      <th style={{ textAlign: 'left' }}>Resultado</th>
-                      <th>Pontos</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      ['Campeão',                           '100'],
-                      ['Vice-campeão',                      '80' ],
-                      ['3º e 4º lugares',                   '65' ],
-                      ['5º lugar — campeão da consolação',  '50' ],
-                      ['6º lugar — vice da consolação',     '40' ],
-                      ['7º e 8º lugares',                   '30' ],
-                      ['9º a 12º lugares',                  '15' ],
-                    ].map(([label, pts]) => (
-                      <tr key={label}>
-                        <td style={{ textAlign: 'left', color: 'var(--qg-fg-2)' }}>{label}</td>
-                        <td style={{ fontWeight: 700 }}>{pts}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div style={{
+              marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--qg-line)',
+              fontSize: 11, color: 'var(--qg-fg-3)', letterSpacing: '0.02em',
+            }}>
+              <span style={{ fontWeight: 600, marginRight: 6, color: 'var(--qg-fg-2)' }}>Pontuação:</span>
+              Campeão 100 · Vice 80 · 3º-4º 65 · 5º 50 · 6º 40 · 7º-8º 30 · 9º-12º 15
             </div>
           </>
         </>
