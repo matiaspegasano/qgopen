@@ -7,6 +7,7 @@ type RequestBody = {
   startTime: string;
   endTime: string;
   toPlayer: string;
+  location?: string;
 };
 
 type ResponseBody = {
