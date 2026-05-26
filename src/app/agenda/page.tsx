@@ -256,10 +256,10 @@ export default function AgendaPage() {
         </div>
 
         {/* ── TWO-COLUMN LAYOUT ── */}
-        <div className="agenda-layout">
+        <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
 
-          {/* LEFT — Calendar grid */}
-          <div className="agenda-calendar">
+          {/* LEFT — Calendar grid (fills most of the width) */}
+          <div style={{ flex: '1 1 0', minWidth: 0 }}>
             <div className="card" style={{ overflow: 'hidden' }}>
 
               {/* Round nav */}
