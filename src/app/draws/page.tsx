@@ -328,16 +328,16 @@ function GroupsView({ editionId, editionLabel }: { editionId: number; editionLab
 
         <StandingsCards group={group} editionId={editionId} />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 32 }}>
-          {rounds.map(r => <RoundSection key={r.key} matches={r.items} />)}
-        </div>
-
         <div style={{
-          marginTop: 32, paddingTop: 16, borderTop: '1px solid var(--qg-line)',
+          marginTop: 12, paddingBottom: 16, borderBottom: '1px solid var(--qg-line)',
           fontSize: 11, color: 'var(--qg-fg-3)', letterSpacing: '0.02em',
         }}>
           <span style={{ fontWeight: 600, marginRight: 6, color: 'var(--qg-fg-2)' }}>Critérios:</span>
           Pontos · Confronto direto · Saldo de sets · Saldo de games · Sorteio
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 32 }}>
+          {rounds.map(r => <RoundSection key={r.key} matches={r.items} />)}
         </div>
       </div>
     </>
