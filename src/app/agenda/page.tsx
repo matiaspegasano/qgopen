@@ -84,11 +84,13 @@ function buildRounds(): RoundData[] {
 
   return [...byDates.entries()]
     .map(([dates, matches]) => {
-      const weekDays = parseMatchWindow(dates);
+      const windowDays = parseMatchWindow(dates);
+      const start = windowDays[0];
+      const end   = windowDays[windowDays.length - 1];
+      // Always Mon-Sun of the week that contains the round's start date
+      const weekDays = getMonSunWeek(start);
       return {
-        dates,
-        start: weekDays[0],
-        end: weekDays[weekDays.length - 1],
+        dates, start, end,
         phaseName: derivePhaseName(matches.map(m => m.roundLabel)),
         weekDays,
         matches,
